@@ -1,27 +1,52 @@
-# AngularLifecycleChange
+# Angular Lifecycle - OnChanges
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.4.
 
-## Development server
+#### app.component.html
+```
+<h3>Angular - Lifecycle - change</h3>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+<h3>List Products</h3>
+Select Product: 
+<select [(ngModel)]="selectedProduct" name="selectedProduct" >
+<option *ngFor="let productName of products" value="{{productName}}">{{productName}}</option>
+</select>
+<span *ngIf="selectedProduct">
+  <app-view-product [productName]="selectedProduct"></app-view-product>
+</span>
 
-## Code scaffolding
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+#### viewproduct.component.html
+```
+<h3>View Product (Child Component)</h3>
+Current Value: {{productName}}
+<br/>
+Previous Value: {{previousValue}}
+```
 
-## Build
+#### viewproduct.component.ts
+```
+export class ViewProductComponent implements OnInit,OnChanges {
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+  @Input()
+  productName:string;
 
-## Running unit tests
+  constructor() { }
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+  ngOnInit() {
+  }
 
-## Running end-to-end tests
+  previousValue:string;
+  
+  ngOnChanges(changes:SimpleChanges): void {
+    console.log('OnChanges - called');
+    const name: SimpleChange = changes.productName;
+    console.log('Previous value: ', name.previousValue);
+    console.log('Current Value: ', name.currentValue);
+    this.previousValue = name.previousValue;
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+  }
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+}
+```
